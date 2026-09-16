@@ -11,14 +11,11 @@ class DataPreprocessor:
         self.data_preprocessing_config = data_preprocessing_config
 
     @staticmethod
-    def _grayscale() -> transforms.Grayscale:
-        return transforms.Grayscale()
-
-    def _resize(self) -> transforms.Resize:
+    def _resize(img_size) -> transforms.Resize:
         return transforms.Resize(
             size=(
-                self.data_preprocessing_config.img_size,
-                self.data_preprocessing_config.img_size,
+                img_size,
+                img_size,
             )
         )
 
@@ -26,18 +23,21 @@ class DataPreprocessor:
     def _to_tensor() -> transforms.ToTensor:
         return transforms.ToTensor()
 
-    def _normalize(self) -> transforms.Normalize:
+    @staticmethod
+    def _normalize(mean, std) -> transforms.Normalize:
         return transforms.Normalize(
-            mean=self.data_preprocessing_config.mean,
-            std=self.data_preprocessing_config.std,
+            mean=mean,
+            std=std,
         )
 
     def build_transforms(self) -> transforms.Compose:
         return transforms.Compose(
             [
-                self._grayscale(),
-                self._resize(),
+                self._resize(self.data_preprocessing_config.img_size),
                 self._to_tensor(),
-                self._normalize(),
+                self._normalize(
+                    self.data_preprocessing_config.mean,
+                    self.data_preprocessing_config.std,
+                ),
             ]
         )

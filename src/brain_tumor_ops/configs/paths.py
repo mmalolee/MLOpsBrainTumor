@@ -17,12 +17,3 @@ class PathsConfig:
     @property
     def source_raw_testing_data_dir(self):
         return self.source_raw_data_dir / "Testing"
-
-
-if __name__ == "__main__":
-    p = PathsConfig()
-
-    print(p.ROOT_DIR)
-    print(p.source_raw_data_dir)
-    print(p.source_raw_training_data_dir)
-    print(p.source_raw_testing_data_dir)

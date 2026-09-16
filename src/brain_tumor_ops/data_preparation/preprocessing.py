@@ -7,7 +7,7 @@ class DataPreprocessor:
     def __init__(
         self,
         data_preprocessing_config: DataPreprocessingConfig,
-    ):
+    ) -> None:
         self.data_preprocessing_config = data_preprocessing_config
 
     @staticmethod

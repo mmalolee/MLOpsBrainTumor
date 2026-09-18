@@ -6,13 +6,9 @@ from src.brain_tumor_ops.configs.data_loader import DataLoaderConfig
 
 class DataLoaderFactory:
     def __init__(
-        self,
-        training_data: ImageFolder,
-        test_data: ImageFolder,
-        training_config: DataLoaderConfig,
+        self, training_config: DataLoaderConfig, training_data: ImageFolder
     ) -> None:
         self.training_data = training_data
-        self.test_data = test_data
         self.training_config = training_config
 
     @staticmethod
@@ -38,13 +34,4 @@ class DataLoaderFactory:
             num_workers=self.training_config.num_workers,
             pin_memory=self.training_config.pin_memory,
             shuffle=self.training_config.training_shuffle,
-        )
-
-    def get_test_data_loader(self) -> DataLoader:
-        return self._get_data_loader(
-            dataset=self.test_data,
-            batch_size=self.training_config.batch_size,
-            num_workers=self.training_config.num_workers,
-            pin_memory=self.training_config.pin_memory,
-            shuffle=self.training_config.test_shuffle,
         )

@@ -7,18 +7,12 @@ from src.brain_tumor_ops.pipelines.training_pipeline import TrainingPipeline
 
 
 def main() -> None:
-    paths_config = PathsConfig()
-    data_preprocessing_config = DataPreprocessingConfig()
-    data_loader_config = DataLoaderConfig()
-    model_config = ModelConfig()
-    training_config = TrainingConfig()
-
     training_pipeline = TrainingPipeline(
-        paths_config,
-        data_preprocessing_config,
-        data_loader_config,
-        model_config,
-        training_config,
+        PathsConfig(),
+        DataPreprocessingConfig(),
+        DataLoaderConfig(),
+        ModelConfig(),
+        TrainingConfig(),
     )
 
     training_pipeline.run()

@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from datetime import datetime
 from pathlib import Path
 
 
@@ -21,9 +20,8 @@ class PathsConfig:
 
     @property
     def artifacts_dir(self) -> Path:
-        return self.ROOT_DIR / "src" / "brain_tumor_ops" / "artifacts"
+        return self.ROOT_DIR / "artifacts"
 
     @property
-    def model_dir(self) -> Path:
-        model_dir_timestamp = f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"  # noqa: DTZ005
-        return self.artifacts_dir / model_dir_timestamp
+    def mvp_model_dir(self) -> Path:
+        return self.artifacts_dir / "mvp_model" / "mvp_model.pt"

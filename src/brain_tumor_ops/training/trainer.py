@@ -1,4 +1,3 @@
-from datetime import datetime
 from pathlib import Path
 
 import torch
@@ -39,15 +38,14 @@ class Trainer:
 
     @staticmethod
     def _save_model(
-        model_dir: Path,
+        mvp_model_dir: Path,
         model: nn.Module,
         optimizer: optim.Optimizer,
         train_loss: float,
     ) -> None:
-        model_dir.mkdir(parents=True, exist_ok=True)
+        mvp_model_dir.mkdir(parents=True, exist_ok=True)
 
-        model_timestamp = f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.pt"  # noqa: DTZ005
-        model_path = model_dir / model_timestamp
+        mvp_model_path = mvp_model_dir / "mvp_model.pt"
 
         torch.save(
             {
@@ -55,9 +53,9 @@ class Trainer:
                 "optimizer_state_dict": optimizer.state_dict(),
                 "train_loss": train_loss,
             },
-            model_path,
+            mvp_model_path,
         )
-        print(f"Zapisano checkpoint: {model_path.resolve()}")
+        print(f"Zapisano checkpoint: {mvp_model_path.resolve()}")
 
     def fit(
         self,
@@ -65,11 +63,11 @@ class Trainer:
         model: nn.Sequential,
         optimizer: optim.Adam,
         cost_function: nn.CrossEntropyLoss,
-        model_dir: Path,
+        mvp_model_path: Path,
     ):
         for _ in range(1, self.training_config.epochs + 1):
             avg_loss = self._train_one_epoch(
                 training_data_loader, model, optimizer, cost_function
             )
 
-        self._save_model(model_dir, model, optimizer, avg_loss)
+        self._save_model(mvp_model_path, model, optimizer, avg_loss)

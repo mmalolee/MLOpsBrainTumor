@@ -57,5 +57,5 @@ class TrainingPipeline:
             model,
             optimizer,
             cost_function,
-            self.paths_config.model_dir,
+            self.paths_config.mvp_model_dir,
         )

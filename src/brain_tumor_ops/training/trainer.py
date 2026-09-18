@@ -39,14 +39,15 @@ class Trainer:
 
     @staticmethod
     def _save_model(
-        artifacts_dir: Path,
+        model_dir: Path,
         model: nn.Module,
         optimizer: optim.Optimizer,
         train_loss: float,
     ) -> None:
-        artifacts_dir.mkdir(parents=True, exist_ok=True)
-        model_timestamp = str(datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))  # noqa: DTZ005
-        model_path = artifacts_dir / model_timestamp
+        model_dir.mkdir(parents=True, exist_ok=True)
+
+        model_timestamp = f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.pt"  # noqa: DTZ005
+        model_path = model_dir / model_timestamp
 
         torch.save(
             {
@@ -56,6 +57,7 @@ class Trainer:
             },
             model_path,
         )
+        print(f"Zapisano checkpoint: {model_path.resolve()}")
 
     def fit(
         self,
@@ -63,11 +65,11 @@ class Trainer:
         model: nn.Sequential,
         optimizer: optim.Adam,
         cost_function: nn.CrossEntropyLoss,
-        artifacts_dir: Path,
+        model_dir: Path,
     ):
         for _ in range(1, self.training_config.epochs + 1):
             avg_loss = self._train_one_epoch(
                 training_data_loader, model, optimizer, cost_function
             )
 
-        self._save_model(artifacts_dir, model, optimizer, avg_loss)
+        self._save_model(model_dir, model, optimizer, avg_loss)

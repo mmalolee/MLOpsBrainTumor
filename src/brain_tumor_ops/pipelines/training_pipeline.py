@@ -38,8 +38,9 @@ class TrainingPipeline:
         )
 
         training_data_loader_factory = DataLoaderFactory(
-            self.training_config, training_dataset
+            self.data_loader_config, training_dataset
         )
+        training_data_loader = training_data_loader_factory.get_training_data_loader()
 
         model = TumorClassifier(self.model_config)
         model.to(self.training_config.device)
@@ -52,9 +53,9 @@ class TrainingPipeline:
         trainer = Trainer(self.training_config)
 
         trainer.fit(
-            training_data_loader_factory,
+            training_data_loader,
             model,
             optimizer,
             cost_function,
-            self.paths_config.artifacts_dir,
+            self.paths_config.model_dir,
         )

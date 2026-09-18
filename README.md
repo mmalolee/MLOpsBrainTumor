@@ -1,0 +1,1 @@
+cos tam zeby bylo sztywno

@@ -4,5 +4,5 @@ import torch
 
 
 @dataclass
-class InferenceConfig:
+class PredictionConfig:
     device: str = "cuda" if torch.cuda.is_available() else "cpu"

@@ -3,8 +3,8 @@ from typing import Any
 import torch
 from torch import nn
 
-from src.brain_tumor_ops.configs.inference import InferenceConfig
 from src.brain_tumor_ops.configs.paths import PathsConfig
+from src.brain_tumor_ops.configs.prediction import InferenceConfig
 
 
 class Predictor:

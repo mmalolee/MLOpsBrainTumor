@@ -42,20 +42,18 @@ class Trainer:
         model: nn.Module,
         optimizer: optim.Optimizer,
         train_loss: float,
+        classes: list[str],
     ) -> None:
-        mvp_model_dir.mkdir(parents=True, exist_ok=True)
-
-        mvp_model_path = mvp_model_dir / "mvp_model.pt"
-
         torch.save(
             {
                 "model_state_dict": model.state_dict(),
                 "optimizer_state_dict": optimizer.state_dict(),
                 "train_loss": train_loss,
+                "classes": classes,
             },
-            mvp_model_path,
+            mvp_model_dir,
         )
-        print(f"Zapisano checkpoint: {mvp_model_path.resolve()}")
+        print(f"Zapisano checkpoint: {mvp_model_dir.resolve()}")
 
     def fit(
         self,
@@ -70,4 +68,10 @@ class Trainer:
                 training_data_loader, model, optimizer, cost_function
             )
 
-        self._save_model(mvp_model_path, model, optimizer, avg_loss)
+        self._save_model(
+            mvp_model_path,
+            model,
+            optimizer,
+            avg_loss,
+            training_data_loader.dataset.classes,
+        )

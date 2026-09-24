@@ -21,6 +21,9 @@ class Predictor:
             map_location=self.prediction_config.device,
         )
 
+    def get_classes(self):
+        return self._load_torch_file()["classes"]
+
     def initialize_model_weight(self, model: nn.Module) -> None:
         model.load_state_dict(self._load_torch_file()["model_state_dict"])
 
@@ -30,10 +33,8 @@ class Predictor:
         image_tensor = image_tensor.unsqueeze(0)
         image_tensor = image_tensor.to(self.prediction_config.device)
 
-        classes = self._load_torch_file()["classes"]
-
         with torch.inference_mode():
             logits = model(image_tensor)
-            predicted_class = logits.argmax(dim=1)
+            predicted_class = logits.argmax(dim=1).item()
 
-        return classes[predicted_class.item()]
+        return self.get_classes()[predicted_class]

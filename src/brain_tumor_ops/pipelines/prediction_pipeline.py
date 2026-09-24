@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from PIL import Image
 
 from src.brain_tumor_ops.architectures.cnn import TumorClassifier
@@ -22,16 +24,17 @@ class PredictionPipeline:
         self.model_config = model_config
         self.data_preprocessing_config = data_preprocessing_config
 
-    def run(self, image_path) -> None:
-        model = TumorClassifier(self.model_config)
-        predictor = Predictor(self.prediction_config, self.paths_config)
-        predictor.initialize_model_weight(model)
-        model.to(self.prediction_config.device)
+        self.model = TumorClassifier(self.model_config)
+        self.model.to(self.prediction_config.device)
+        self.preprocessor = DataPreprocessor(self.data_preprocessing_config)
+        self.predictor = Predictor(self.prediction_config, self.paths_config)
+        self.transformer = self.preprocessor.build_transforms()
+        self.predictor.initialize_model_weight(self.model)
 
-        preprocessor = DataPreprocessor(self.data_preprocessing_config)
-        transformer = preprocessor.build_transforms()
+    def predict_image(self, image: Image.Image) -> str:
+        image_tensor = self.transformer(image.convert("RGB"))
+        return self.predictor.predict(self.model, image_tensor)
 
+    def run(self, image_path: Path) -> str:
         with Image.open(image_path) as image:
-            image_tensor = transformer(image.convert("RGB"))
-
-        return predictor.predict(model, image_tensor)
+            return self.predict_image(image)

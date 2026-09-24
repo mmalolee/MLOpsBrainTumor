@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request, UploadFile
-from PIL import Image
+from fastapi import FastAPI, HTTPException, Request, UploadFile
+from PIL import Image, UnidentifiedImageError
 
 from src.brain_tumor_ops.configs.model import ModelConfig
 from src.brain_tumor_ops.configs.paths import PathsConfig
@@ -31,8 +31,12 @@ def root() -> dict[str, str]:
 
 @app.post("/predict")
 def predict(file: UploadFile, request: Request):
-    with Image.open(file.file) as uploaded_image:
-        image = uploaded_image.convert("RGB")
+    try:
+        with Image.open(file.file) as uploaded_image:
+            image = uploaded_image.convert("RGB")
+
+    except UnidentifiedImageError:
+        raise HTTPException(status_code=400, detail="Provided file is not an image.")
 
     classification_pipeline = request.app.state.pipeline
     classification = classification_pipeline.predict_image(image)
